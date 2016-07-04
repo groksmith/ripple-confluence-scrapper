@@ -2,4 +2,11 @@
 
 
 class Converter(object):
-    pass
+    @staticmethod
+    def cnf_to_md(content=None):
+        """
+        Convert Confluence document to Markdown
+        :param content:
+        :return:
+        """
+        pass
