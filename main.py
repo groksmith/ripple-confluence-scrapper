@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-
+import click
 import os
-from utils.confluence import Confluence
+from config import Config
+from converter import Converter
 
-# Confluence config
-CNF_USERNAME = os.environ.get('CNF_USERNAME', None)
-CNF_PASSWORD = os.environ.get('CNF_PASSWORD', None)
-CNF_BASE_URL = os.environ.get('CNF_BASE_URL', 'https://ararat.atlassian.net/rest/api/content')
+pass_config = click.make_pass_decorator(Config, ensure=True)
 
-# GitHub config
-GH_USERNAME = os.environ.get('GH_USERNAME', None)
-GH_PASSWORD = os.environ.get('GH_PASSWORD', None)
 
-if __name__ == '__main__':
-    cnf = Confluence(username=CNF_USERNAME, password=CNF_PASSWORD, base_url=CNF_BASE_URL)
-    cnf.get_content()
+@click.command()
+@click.argument('src-dir')
+@pass_config
+def cli(config, src_dir):
+    """This cli tool converts confluence html to markdown"""
+    src_dir = os.path.join(config.base_dir, src_dir)
+
+    converter = Converter(config=config, src_dir=src_dir)
+    converter.convert()
