@@ -13,9 +13,10 @@ Installation
 
 * Open **terminal**
 * Clone project.
+* Export space from confluence to html(do not export comments).
+* Copy exported directory to `files` folder.
 * Change your working directory to cloned project directory.
 * Create virtual environment:  `$ virtualenv -p python3 envname`.
+* Upgrade setuptools:  `$ pip install --no-use-wheel --upgrade setuptools`.
 * Install package: `$ pip install --editable .`
-* Export space from confluence to html(do not export comments).
-* Run `$ cnf-convert {CONFLUENCE_EXPORT_DIRECTORY}`.
-* pip install --no-use-wheel --upgrade setuptools
+* Run `$ cnf-convert files/{CONFLUENCE_EXPORT_DIRECTORY}`.
