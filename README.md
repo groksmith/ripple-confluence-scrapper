@@ -26,3 +26,8 @@ Issues
 ------
 
 * How to save callouts, problem with multline strings.
+
+Suggestions
+-----------
+
+* We can setup this project in pypi under private repo. 
