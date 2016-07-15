@@ -90,6 +90,8 @@ def cli(src_dir, silent, keep_tmp):
         shutil.rmtree(tmp_dir)
         log("success", "Success\n", silent)
 
+    log("success", "All files are in '{}' directory\n".format(out_dir), silent)
+
 
 def convert_content(content):
     soup = BeautifulSoup(content, "html.parser")
