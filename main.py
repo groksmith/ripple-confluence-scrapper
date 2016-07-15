@@ -102,6 +102,9 @@ def convert_content(content):
         td.string = str(td.text).strip()
         td.string = str(td.text).replace("\n", " ")
 
+    footer = soup.find('div', id='footer')
+    footer.extract()
+
     output = html2text.html2text(str(soup), baseurl='', bodywidth=1000000000)
     return output
 
