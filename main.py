@@ -7,7 +7,7 @@ import shutil
 from tqdm import tqdm
 import datetime
 from colorama import Fore, Back, Style, init
-from bs4 import BeautifulSoup, NavigableString
+from bs4 import BeautifulSoup
 
 # Init colorama
 init()
