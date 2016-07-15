@@ -77,13 +77,12 @@ def cli(src_dir, silent, keep_tmp):
     log("info", "Convert files to Markdown", silent=silent)
     for file in tqdm(os.listdir(tmp_dir), disable=silent):
         sleep(0.01)
-
-        if file.endswith(".html"):
+        # file.endswith(".html")
+        if file == 'Payment-States_2425830.html':
             f = open(os.path.join(tmp_dir, file), 'r')
             md = convert_content(f.read())
             nf = open(os.path.join(out_dir, file.replace('.html', '.md')), 'w')
             nf.write(md)
-
     log("success", "Success\n", silent)
 
     if not keep_tmp:
