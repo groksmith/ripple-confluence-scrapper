@@ -18,3 +18,4 @@ Installation
 * Install package: `$ pip install --editable .`
 * Export space from confluence to html(do not export comments).
 * Run `$ cnf-convert {CONFLUENCE_EXPORT_DIRECTORY}`.
+* pip install --no-use-wheel --upgrade setuptools

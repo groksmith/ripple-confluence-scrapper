@@ -4,9 +4,11 @@ import os
 from time import sleep
 import html2text
 import shutil
+from past.builtins.misc import unicode
 from tqdm import tqdm
 import datetime
 from colorama import Fore, Back, Style, init
+from bs4 import BeautifulSoup, NavigableString
 
 # Init colorama
 init()
@@ -49,7 +51,7 @@ def cli(src_dir, silent, keep_tmp):
 
     log("info", "Preparing content...", silent)
 
-    log("error", "Copying necessary directories", silent)
+    log("info", "Copying necessary directories", silent)
     if not os.path.exists(tmp_dir):
         os.makedirs(tmp_dir)
 
@@ -57,7 +59,7 @@ def cli(src_dir, silent, keep_tmp):
         os.makedirs(out_dir)
 
     log("info", "Copying necessary files", silent)
-    _copytree(src=src_dir, dst=tmp_dir, silent=silent)
+    copytree(src=src_dir, dst=tmp_dir, silent=silent)
 
     log("success", "Success\n", silent)
 
@@ -68,16 +70,17 @@ def cli(src_dir, silent, keep_tmp):
     log("info", "Converting...", silent)
 
     log("info", "Copying necessary directories", silent)
-    _copytree(src=os.path.join(tmp_dir, 'attachments'), dst=os.path.join(out_dir, 'attachments'), silent=silent)
-    _copytree(src=os.path.join(tmp_dir, 'images'), dst=os.path.join(out_dir, 'images'), silent=silent)
+    copytree(src=os.path.join(tmp_dir, 'attachments'), dst=os.path.join(out_dir, 'attachments'), silent=silent)
+    copytree(src=os.path.join(tmp_dir, 'images'), dst=os.path.join(out_dir, 'images'), silent=silent)
     log("success", "Success\n", silent)
 
     log("info", "Convert files to Markdown", silent=silent)
     for file in tqdm(os.listdir(tmp_dir), disable=silent):
         sleep(0.01)
-        if file.endswith(".html"):
+        # file.endswith(".html")
+        if file == 'Payment-States_2425830.html':
             f = open(os.path.join(tmp_dir, file), 'r')
-            md = html2text.html2text(f.read())
+            md = convert_content(f.read())
             nf = open(os.path.join(out_dir, file.replace('.html', '.md')), 'w')
             nf.write(md)
     log("success", "Success\n", silent)
@@ -88,9 +91,24 @@ def cli(src_dir, silent, keep_tmp):
         log("success", "Success\n", silent)
 
 
-def _copytree(src, dst, silent):
+def convert_content(content):
+    soup = BeautifulSoup(content, "html.parser")
+
+    for td in soup.findAll("td"):
+        for code in td.findAll("code"):
+            code.unwrap()
+
+        td.string = str(td.text).strip()
+        td.string = str(td.text).replace("\n", " ")
+
+    output = html2text.html2text(str(soup), baseurl='', bodywidth=1000000000)
+    return output
+
+
+def copytree(src, dst, silent):
     """
     Copies entire directory content to destination folder.
+    :param silent:
     :param src: Source directory
     :param dst: Destination directory
     """
@@ -122,3 +140,20 @@ def log(level, message, silent):
             print(Fore.BLUE + message + Style.RESET_ALL)
         if level == "success":
             print(Fore.GREEN + message + Style.RESET_ALL)
+
+
+def strip_tags(html, invalid_tags):
+    soup = BeautifulSoup(html, "html.parser")
+
+    for tag in soup.findAll(True):
+        if tag.name in invalid_tags:
+            s = ""
+
+            for c in tag.contents:
+                if not isinstance(c, NavigableString):
+                    c = strip_tags(unicode(c), invalid_tags)
+                s += unicode(c)
+
+            tag.replaceWith(s)
+
+    return soup
