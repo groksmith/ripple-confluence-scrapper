@@ -19,8 +19,8 @@ BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 
 @click.command()
 @click.argument('src-dir')
-@click.option('--silent', default=False)
-@click.option('--keep-tmp', default=False)
+@click.option('--silent', default=False, help='Runs in silent mode with not output.')
+@click.option('--keep-tmp', default=False, help='If set to true, the temporary folder will not be removed.')
 def cli(src_dir, silent, keep_tmp):
     session_id = str(datetime.datetime.now())
     src_dir = os.path.join(BASE_DIR, src_dir)
