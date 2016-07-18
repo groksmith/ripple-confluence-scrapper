@@ -37,8 +37,8 @@ def cli(src_dir, silent, keep_tmp):
     if not os.path.isdir(src_dir):
         log("error", "Directory '{}' not found.".format(src_dir), silent)
 
-    if not os.path.isdir(os.path.join(src_dir, 'attachments')):
-        log("error", "'attachments' directory is missing from {},".format(src_dir), silent)
+    if not os.path.isfile(os.path.join(src_dir, 'index.html')):
+        log("error", "'index.html' file is missing from {},".format(src_dir), silent)
 
     if not os.path.isdir(os.path.join(src_dir, 'images')):
         log("error", "'images' directory is missing from {},".format(src_dir), silent)
