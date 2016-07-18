@@ -8,6 +8,7 @@ from tqdm import tqdm
 import datetime
 from colorama import Fore, Back, Style, init
 from bs4 import BeautifulSoup
+import re
 
 # Init colorama
 init()
@@ -81,7 +82,7 @@ def cli(src_dir, silent, keep_tmp):
 
         if file.endswith(".html"):
             f = open(os.path.join(tmp_dir, file), 'r')
-            md = convert_content(f.read())
+            md = convert_content(f.read(), names)
             new_filename = str(names[file]) + ".md" if file in names.keys() else file.replace('.html', '.md')
             nf = open(os.path.join(out_dir, new_filename), 'w')
             nf.write(md)
@@ -95,7 +96,7 @@ def cli(src_dir, silent, keep_tmp):
     log("success", "All files are in '{}' directory\n".format(out_dir), silent)
 
 
-def convert_content(content):
+def convert_content(content, names):
     soup = BeautifulSoup(content, "html.parser")
 
     for td in soup.findAll("td"):
@@ -108,7 +109,10 @@ def convert_content(content):
     footer = soup.find('div', id='footer')
     footer.extract()
 
-    output = html2text.html2text(str(soup), baseurl='', bodywidth=1000000000)
+    pattern = re.compile(r'\b(' + '|'.join(names.keys()) + r')\b')
+    result = pattern.sub(lambda x: names[x.group()] + ".html", str(soup))
+
+    output = html2text.html2text(result, baseurl='', bodywidth=1000000000)
     return output
 
 
