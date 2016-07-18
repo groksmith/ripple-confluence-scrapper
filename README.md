@@ -19,8 +19,10 @@ Installation
 * Create virtual environment:  `$ virtualenv -p python3 venv`.
 * Activate virtual environment:  `$ source venv/bin/activate`.
 * Upgrade setuptools:  `$ pip install --no-use-wheel --upgrade setuptools`.
-* Install package: `$ pip install --editable .`
+* Install package: `$ pip install --editable .`.
 * Run `$ cnf-convert files/{CONFLUENCE_EXPORT_DIRECTORY}`.
+
+You can user `$ cnf-convert --help` for more information about cli options.
 
 Issues
 ------
