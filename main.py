@@ -62,6 +62,8 @@ def cli(src_dir, silent, keep_tmp):
 
     log("success", "Success\n", silent)
 
+    names = get_names(src_dir=src_dir, silent=silent)
+
     ####################################################################################################################
     # Converting
     ####################################################################################################################
@@ -80,7 +82,8 @@ def cli(src_dir, silent, keep_tmp):
         if file.endswith(".html"):
             f = open(os.path.join(tmp_dir, file), 'r')
             md = convert_content(f.read())
-            nf = open(os.path.join(out_dir, file.replace('.html', '.md')), 'w')
+            new_filename = str(names[file]) + ".md" if file in names.keys() else file.replace('.html', '.md')
+            nf = open(os.path.join(out_dir, new_filename), 'w')
             nf.write(md)
     log("success", "Success\n", silent)
 
@@ -125,6 +128,23 @@ def copytree(src, dst, silent):
             shutil.copytree(s, d)
         else:
             shutil.copy2(s, d)
+
+
+def get_names(src_dir, silent):
+    log("info", "Getting names for files", silent)
+    # pageSection
+    names = {}
+
+    soup = BeautifulSoup(open(os.path.join(src_dir, "index.html"), "r"), "html.parser")
+    items = soup.findAll("li")
+
+    for item in items:
+        links = item.findAll("a")
+
+        for link in links:
+            names[link['href']] = link.text
+
+    return names
 
 
 def log(level, message, silent):
