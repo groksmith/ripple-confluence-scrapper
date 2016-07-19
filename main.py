@@ -118,11 +118,20 @@ def convert_content(content, names):
     footer = soup.find('div', id='footer')
     footer.extract()
 
+    codes = soup.findAll("code")
+
+    for code in codes:
+        anchors = code.findAll("a")
+        for anchor in anchors:
+            if anchor.parent.name == 'code':
+                anchor.parent.unwrap()
+
     pattern = re.compile(r'\b(' + '|'.join(names.keys()) + r')\b')
     result = pattern.sub(lambda x: names[x.group()] + ".html", str(soup))
 
     output = html2text.html2text(result, baseurl='', bodywidth=1000000000)
     output = output.replace("Documentation :", "")
+
 
     return output
 
