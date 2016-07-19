@@ -166,7 +166,7 @@ def get_names(src_dir, silent):
         links = item.findAll("a")
 
         for link in links:
-            names[link['href']] = link.text
+            names[link['href']] = slugify(link.text)
 
     return names
 
@@ -188,3 +188,18 @@ def log(level, message, silent):
             print(Fore.BLUE + message + Style.RESET_ALL)
         if level == "success":
             print(Fore.GREEN + message + Style.RESET_ALL)
+
+
+def slugify(text):
+    """ Simplifies ugly strings into slugyfied ones."""
+    text = text.lower()
+    for c in [' ', '-', '.', '/']:
+        text = text.replace(c, '_')
+
+    text = re.sub('\W', '', text)
+    text = text.replace('_', ' ')
+    text = re.sub('\s+', ' ', text)
+    text = text.strip()
+    text = text.replace(' ', '-')
+
+    return text
