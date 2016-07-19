@@ -103,6 +103,18 @@ def convert_content(content, names):
         td.string = str(td.text).strip()
         td.string = str(td.text).replace("\n", " ")
 
+    breadcrumbs = soup.findAll('div', id='breadcrumb-section')
+
+    for breadcrumb in breadcrumbs:
+        if breadcrumb is not None:
+            breadcrumb.extract()
+
+    page_metadatas = soup.findAll('div', {'class': 'page-metadata'})
+
+    for page_metadata in page_metadatas:
+        if page_metadata is not None:
+            page_metadata.extract()
+
     footer = soup.find('div', id='footer')
     footer.extract()
 
@@ -110,6 +122,8 @@ def convert_content(content, names):
     result = pattern.sub(lambda x: names[x.group()] + ".html", str(soup))
 
     output = html2text.html2text(result, baseurl='', bodywidth=1000000000)
+    output = output.replace("Documentation :", "")
+
     return output
 
 
