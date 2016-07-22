@@ -69,8 +69,13 @@ def cli(src_dir, silent, keep_tmp):
     log("info", "Converting...", silent)
 
     log("info", "Copying necessary directories", silent)
-    copytree(src=os.path.join(tmp_dir, 'attachments'), dst=os.path.join(out_dir, 'attachments'), silent=silent)
-    copytree(src=os.path.join(tmp_dir, 'images'), dst=os.path.join(out_dir, 'images'), silent=silent)
+
+    if os.path.isdir(os.path.join(tmp_dir, 'attachments')):
+        copytree(src=os.path.join(tmp_dir, 'attachments'), dst=os.path.join(out_dir, 'attachments'), silent=silent)
+
+    if os.path.isdir(os.path.join(tmp_dir, 'images')):
+        copytree(src=os.path.join(tmp_dir, 'images'), dst=os.path.join(out_dir, 'images'), silent=silent)
+
     log("success", "Success\n", silent)
 
     log("info", "Convert files to Markdown", silent=silent)
