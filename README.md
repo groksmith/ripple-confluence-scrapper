@@ -15,14 +15,12 @@ Installation
 * Clone project.
 * Export space from confluence to html(do not export comments).
 * Copy exported directory to `files` folder.
+* Run `$ sudo chmod a+x install.sh` (this must be done once).
+* Run `$ sudo chmod a+x convert.sh` (this must be done once).
 * Change your working directory to cloned project directory.
-* Create virtual environment:  `$ virtualenv -p python3 venv`.
-* Activate virtual environment:  `$ source venv/bin/activate`.
-* Upgrade setuptools:  `$ pip install --no-use-wheel --upgrade setuptools`.
-* Install package: `$ pip install --editable .`.
-* Run `$ cnf-convert files/{CONFLUENCE_EXPORT_DIRECTORY}`.
+* Run:  `$ ./install.sh`.
 
-You can user `$ cnf-convert --help` for more information about cli options.
+Then for converting you can run `$ ./convert {DOCS_DIR}`
 
 Issues
 ------
