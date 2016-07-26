@@ -123,6 +123,12 @@ def convert_content(content, names):
     footer = soup.find('div', id='footer')
     footer.extract()
 
+    anchors = soup.findAll("a")
+
+    for anchor in anchors:
+        if str(anchor['href']).startswith("#"):
+            anchor['href'] = anchor.text + anchor['href']
+
     codes = soup.findAll("code")
 
     for code in codes:
