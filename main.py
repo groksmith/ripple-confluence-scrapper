@@ -127,7 +127,7 @@ def convert_content(content, names):
 
     for anchor in anchors:
         if str(anchor['href']).startswith("#"):
-            anchor['href'] = anchor.text + anchor['href']
+            anchor['href'] = "anchor-hash" + anchor['href']
 
     codes = soup.findAll("code")
 
@@ -142,7 +142,7 @@ def convert_content(content, names):
 
     output = html2text.html2text(result, baseurl='', bodywidth=1000000000)
     output = output.replace("Documentation :", "")
-
+    output = output.replace("anchor-hash#", "#")
 
     return output
 
