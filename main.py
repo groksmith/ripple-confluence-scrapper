@@ -108,6 +108,10 @@ def convert_content(content, names):
         td.string = str(td.text).strip()
         td.string = str(td.text).replace("\n", " ")
 
+    for td in soup.findAll("th"):
+        for p in td.findAll("p"):
+            p.unwrap()
+
     breadcrumbs = soup.findAll('div', id='breadcrumb-section')
 
     for breadcrumb in breadcrumbs:
@@ -121,7 +125,9 @@ def convert_content(content, names):
             page_metadata.extract()
 
     footer = soup.find('div', id='footer')
-    footer.extract()
+
+    if footer is not None:
+        footer.extract()
 
     anchors = soup.findAll("a")
 
