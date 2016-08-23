@@ -143,6 +143,23 @@ def convert_content(content, names):
             if anchor.parent.name == 'code':
                 anchor.parent.unwrap()
 
+    # Convert callouts
+    callouts = soup.findAll('div', {'class': 'confluence-information-macro'})
+
+    for callout in callouts:
+        output = None
+        body = callout.find("div", {"class": "confluence-information-macro-body"})
+
+        if body is not None:
+            output = "**Note:** " + str(body)
+
+        if output is not None:
+            output = html2text.html2text(output)
+            output = output.replace("\n", "<br>")
+            output = output.replace("**Note:** <br><br>", "**Note:** ")
+
+            callout.replaceWith(output)
+
     pattern = re.compile(r'\b(' + '|'.join(names.keys()) + r')\b')
     result = pattern.sub(lambda x: names[x.group()] + ".html", str(soup))
 
