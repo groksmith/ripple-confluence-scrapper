@@ -155,10 +155,13 @@ def convert_content(content, names):
 
         if output is not None:
             output = html2text.html2text(output)
-            output = output.replace("\n", "<br>")
-            output = output.replace("**Note:** <br><br>", "**Note:** ")
+            output = output.replace("\n", "<br/>")
+            output = output.replace("**Note:** <br/><br/>", "**Note:** ")
 
+            output = BeautifulSoup(output)
             callout.replaceWith(output)
+
+            print(output)
 
     pattern = re.compile(r'\b(' + '|'.join(names.keys()) + r')\b')
     result = pattern.sub(lambda x: names[x.group()] + ".html", str(soup))
