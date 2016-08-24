@@ -158,10 +158,33 @@ def convert_content(content, names):
             output = output.replace("\n", "<br/>")
             output = output.replace("**Note:** <br/><br/>", "**Note:** ")
 
-            output = BeautifulSoup(output)
+            output = BeautifulSoup(output, "html.parser")
             callout.replaceWith(output)
 
-            print(output)
+    for macro in soup.findAll(True, {'class': [
+        'confluence-information-macro',
+        'confluence-information-macro-information',
+        'conf-macro output-block'
+    ]}):
+        if macro is not None:
+            tmp = html2text.html2text(str(macro))
+            tmp = "&nbsp;&nbsp;&nbsp;&nbsp;" + tmp
+            tmp = BeautifulSoup(tmp, "html.parser")
+            macro.replaceWith(tmp)
+
+    # Indent code samples
+    for sample in soup.findAll(True, {'class': [
+        'code',
+        'panel',
+        'pdl',
+        'conf-macro',
+        'output-block'
+    ]}):
+        if sample is not None:
+            tmp = html2text.html2text(str(sample))
+            tmp = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + tmp
+            tmp = BeautifulSoup(tmp, "html.parser")
+            sample.replaceWith(tmp)
 
     pattern = re.compile(r'\b(' + '|'.join(names.keys()) + r')\b')
     result = pattern.sub(lambda x: names[x.group()] + ".html", str(soup))
