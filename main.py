@@ -155,8 +155,13 @@ def convert_content(content, names):
 
         if output is not None:
             output = html2text.html2text(output)
-            output = output.replace("\n", "<br/>")
+            # output = output.replace("\n", "<br/>")
             output = output.replace("**Note:** <br/><br/>", "**Note:** ")
+            output = re.sub(' +', ' ', output)
+            output = output.replace('\n ', '\n')
+            output = output.replace(' \n', '\n')
+            output = output.replace(' \n ', '\n')
+            output = output.replace('\n\n\n', '')
 
             output = BeautifulSoup(output, "html.parser")
             callout.replaceWith(output)
