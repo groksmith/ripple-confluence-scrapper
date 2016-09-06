@@ -191,11 +191,32 @@ def convert_content(content, names):
             tmp = BeautifulSoup(tmp, "html.parser")
             sample.replaceWith(tmp)
 
+    for li in soup.findAll("li"):
+        code = li.find("code")
+        pre = li.find("pre")
+        brs = li.findAll("br")
+
+        if code is not None:
+            tmp = "**SPACE****SPACE****SPACE****SPACE****SPACE**" + str(code)
+            tmp = BeautifulSoup(tmp, "html.parser")
+            code.replaceWith(tmp)
+
+        if pre is not None:
+            tmp = "**SPACE****SPACE****SPACE****SPACE****SPACE**" + str(pre)
+            tmp = BeautifulSoup(tmp, "html.parser")
+            pre.replaceWith(tmp)
+
+        for br in brs:
+            tmp = str(br) + '**SPACE****SPACE****SPACE****SPACE****SPACE**'
+            tmp = BeautifulSoup(tmp, "html.parser")
+            br.replaceWith(tmp)
+
     pattern = re.compile(r'\b(' + '|'.join(names.keys()) + r')\b')
     result = pattern.sub(lambda x: names[x.group()] + ".html", str(soup))
 
     output = html2text.html2text(result, baseurl='', bodywidth=1000000000)
     output = output.replace("Documentation :", "")
+    output = output.replace("**SPACE**", "&nbsp;")
     output = output.replace("anchor-hash#", "#")
 
     return output
