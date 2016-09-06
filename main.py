@@ -192,9 +192,10 @@ def convert_content(content, names):
             sample.replaceWith(tmp)
 
     for li in soup.findAll("li"):
-        code = li.find("code")
-        pre = li.find("pre")
-        brs = li.findAll("br")
+        s = BeautifulSoup(str(li), "html.parser")
+        code = s.find("code")
+        pre = s.find("pre")
+        brs = s.findAll("br")
 
         if code is not None:
             tmp = "**SPACE****SPACE****SPACE****SPACE****SPACE**" + str(code)
@@ -210,6 +211,8 @@ def convert_content(content, names):
             tmp = str(br) + '**SPACE****SPACE****SPACE****SPACE****SPACE**'
             tmp = BeautifulSoup(tmp, "html.parser")
             br.replaceWith(tmp)
+
+        li.replaceWith(s)
 
     pattern = re.compile(r'\b(' + '|'.join(names.keys()) + r')\b')
     result = pattern.sub(lambda x: names[x.group()] + ".html", str(soup))
